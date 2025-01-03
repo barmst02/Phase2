@@ -1,6 +1,3 @@
-/.terraform
-/.terraform.lock.hcl
-/main.tf
+/.terraform*
 /simple_webapp-main
-/stage_s3.cmd
-/tf.plan
+/*.plan
