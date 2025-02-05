@@ -1,3 +1,4 @@
-/.terraform*
+.terraform*
 /simple_webapp-main
 /*.plan
+/*.old
