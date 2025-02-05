@@ -1,0 +1,8 @@
+Run aws configure sso and respond to prompts with the following values:
+
+sso_session_name =
+sso_start_url = https://start.us-gov-west-1.us-gov-home.awsapps.com/directory/launchpad#
+sso_region = us-gov-west-1
+cli_default_client_region = us-gov-west-1
+cli_default_output_format = 
+cli_profile_name = default
