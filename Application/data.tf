@@ -52,7 +52,7 @@ data "aws_subnets" "public" {
     values = ["Public*"]
   }
   //tags = {
-   // name = "Public*"
+  // name = "Public*"
   //}
 }
 
