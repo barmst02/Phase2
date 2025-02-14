@@ -1,5 +1,12 @@
+//These are the resources in the IAM section of the AWS Console
+
+//---------------------------------------------------------
+// Roles
+//---------------------------------------------------------
 
 resource "aws_iam_role" "ec2_role" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
+  //Provides an IAM role.
   name = "EC2Webserver-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,16 +24,25 @@ resource "aws_iam_role" "ec2_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "dynamo_attachment" {
-  role       = aws_iam_role.ec2_role.name
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+  //Attaches a Managed IAM Policy to an IAM role
+  role = aws_iam_role.ec2_role.name
+  //Grant DynamoDB Full Access
   policy_arn = "arn:aws-us-gov:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_attachment" {
-  role       = aws_iam_role.ec2_role.name
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
+  //Attaches a Managed IAM Policy to an IAM role
+  role = aws_iam_role.ec2_role.name
+  //Grant Session Manager Full Access
   policy_arn = "arn:aws-us-gov:iam::aws:policy/AmazonSSMFullAccess"
 }
 
 resource "aws_iam_instance_profile" "iam_profile" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
+  //Provides an IAM instance profile.
+  //This is the resource used when assigning the role to the EC2
   name = "EC2_IAM_Profile"
   role = aws_iam_role.ec2_role.name
 }
