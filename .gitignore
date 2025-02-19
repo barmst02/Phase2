@@ -2,3 +2,4 @@
 /simple_webapp-main
 /*.plan
 /*.old
+*.tfstate
