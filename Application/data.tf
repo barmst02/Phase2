@@ -23,7 +23,8 @@ data "aws_ami" "al2023" {
   //Identify the AL2023 AMI to use for our EC2 instance
   filter {
     name   = "name"
-    values = ["al2023-ami-minimal*x86_64"]
+    values = ["al2023-ami-20*x86_64"]
+    //amazon/al2023-ami-2023.6.20250218.2-kernel-6.1-x86_64
   }
   filter {
     name   = "virtualization-type"
