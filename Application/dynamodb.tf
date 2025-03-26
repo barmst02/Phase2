@@ -10,15 +10,15 @@ resource "aws_dynamodb_table" "db_table" {
   name           = "simple-web-app"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "ProjectName"
-  range_key      = "URL"
+  hash_key       = "Timestamp"
+  range_key      = "Comment"
 
   attribute {
-    name = "ProjectName"
+    name = "Timestamp"
     type = "S"
   }
   attribute {
-    name = "URL"
+    name = "Comment"
     type = "S"
   }
 }
