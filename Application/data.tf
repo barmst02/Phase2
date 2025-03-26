@@ -18,7 +18,7 @@ data "aws_vpc" "main" {
 data "aws_ami" "al2023" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
   //Use this data source to get the ID of a registered AMI for use in other resources.
-  owners = [ "045324592363" ]
+  owners      = ["045324592363"]
   most_recent = true
   //Identify the AL2023 AMI to use for our EC2 instance
   filter {

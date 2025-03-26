@@ -22,7 +22,7 @@ resource "aws_instance" "webserver" {
 
   //Added this to make sure the DynamoDB table is created before the EC2
   //That way the user_data.sh script can populate records in the table
-  depends_on = [aws_dynamodb_table.db_table]
+  # depends_on = [aws_dynamodb_table.db_table]
 }
 
 //---------------------------------------------------------

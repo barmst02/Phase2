@@ -3,7 +3,7 @@
 terraform {
   //While these versions aren't restricted in the Launchpad, they are for CFS2
   //This is documented on "Supported Terraform Versions" in the Cloud Library 
-  required_version = "<=1.9.8"  //of Terraform
+  required_version = "<=1.9.8" //of Terraform
 
   required_providers {
     aws = {
