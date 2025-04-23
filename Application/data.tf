@@ -7,11 +7,7 @@
 data "aws_vpc" "main" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc
   //Provides details about a specific VPC.
-  filter {
-    //Find the VPC we want by looking for one that ends in "tf". 
-    name   = "tag:Name"
-    values = ["*tf"]
-  }
+  default = true
 }
 
 
@@ -44,11 +40,16 @@ data "aws_subnet" "public-1a" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
   //Provides details about a specific VPC subnet.
   vpc_id = data.aws_vpc.main.id
-  //Find the Subnet we want by searching for the name "Public 1a". 
-  filter {
-    name   = "tag:Name"
-    values = ["Public 1a"]
-  }
+  //Find the Subnet we want by searching for the availability zone
+  availability_zone = "us-gov-west-1a"
+}
+
+data "aws_subnet" "public-1b" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
+  //Provides details about a specific VPC subnet.
+  vpc_id = data.aws_vpc.main.id
+  //Find the Subnet we want by searching for the availability zone
+  availability_zone = "us-gov-west-1b"
 }
 
 data "aws_subnets" "public" {

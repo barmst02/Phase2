@@ -13,7 +13,7 @@ resource "aws_instance" "webserver" {
   subnet_id                   = data.aws_subnet.public-1a.id
   associate_public_ip_address = true
   user_data                   = file("user_data.sh")
-  vpc_security_group_ids      = [aws_security_group.sg-ec2.id]
+  vpc_security_group_ids      = [aws_security_group.sg-ec2-tf.id]
   iam_instance_profile        = aws_iam_instance_profile.iam_profile.name
   user_data_replace_on_change = true
   tags = {
@@ -25,98 +25,6 @@ resource "aws_instance" "webserver" {
   depends_on = [aws_dynamodb_table.db_table]
 }
 
-//---------------------------------------------------------
-// Security Groups
-//---------------------------------------------------------
-
-resource "aws_default_security_group" "default" {
-  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_security_group
-  //Provides a resource to manage a default security group. 
-  vpc_id = data.aws_vpc.main.id
-  //As a best practice, we delete all inbound rules from the default security group
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group" "sg-alb" {
-  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
-  //Provides a security group resource.
-  description = "Inbound access for ALB"
-  name        = "alb_sg"
-  vpc_id      = data.aws_vpc.main.id
-  ingress {
-    //Allow port 80 from the AWS Workspace
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  ingress {
-    //Allow port 9090 from the AWS Workspace
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  egress {
-    //Allow all outbound traffic. Outbound traffic is normally not restricted. 
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "alb_sg"
-  }
-}
-
-resource "aws_security_group" "sg-ec2" {
-  description = "Inbound access for EC2"
-  name        = "ec2_sg"
-  vpc_id      = data.aws_vpc.main.id
-  ingress {
-    //Allow port 80 from the Load Balancer (specifically from the Load Balancer security group)
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sg-alb.id]
-  }
-  ingress {
-    //Allow port 9090 from the Load Balancer (specifically from the Load Balancer security group)
-    from_port       = 9090
-    to_port         = 9090
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sg-alb.id]
-  }
-  ingress {
-    //Allow port 80 from the AWS Workspace
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  ingress {
-    //Allow port 9090 from the AWS Workspace
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  egress {
-    //Allow all outbound traffic. Outbound traffic is normally not restricted. 
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "ec2_sg"
-  }
-}
 
 //---------------------------------------------------------
 // Target Groups
@@ -185,7 +93,7 @@ resource "aws_lb" "alb" {
   name               = "WebServer-ALB"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.sg-alb.id]
+  security_groups    = [aws_security_group.sg-alb-tf.id]
   subnets            = [for subnet in data.aws_subnet.public : subnet.id]
 
 }
