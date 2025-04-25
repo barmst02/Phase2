@@ -6,3 +6,7 @@ sso_region = us-gov-west-1
 cli_default_client_region = us-gov-west-1
 cli_default_output_format = 
 cli_profile_name = default
+
+
+aws sso logout
+aws sso login

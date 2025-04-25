@@ -11,6 +11,10 @@ output "primary_subnet" {
   value = data.aws_subnet.public-1a.arn
 }
 
+#output "primary_subnet_detail" {
+#  value = data.aws_subnet.public-1a
+#}
+
 output "public_subnets" {
   value = [for s in data.aws_subnet.public : s.id]
 }
@@ -20,7 +24,7 @@ output "ami" {
 }
 
 output "ecs_dns" {
-  value = aws_instance.webserver.public_dns
+  value = aws_instance.webserver-tf.public_dns
 }
 
 output "alb_dns" {

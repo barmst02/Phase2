@@ -61,8 +61,8 @@ data "aws_subnets" "public" {
   }
   filter {
     //Find the Subnets with a name starting with "Public". 
-    name   = "tag:Name"
-    values = ["Public*"]
+    name   = "map-public-ip-on-launch"
+    values = [true]
   }
 }
 

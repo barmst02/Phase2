@@ -4,7 +4,7 @@
 // Instances
 //---------------------------------------------------------
 
-resource "aws_instance" "webserver" {
+resource "aws_instance" "webserver-tf" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
   //Provides an EC2 instance resource. This allows instances to be created, updated, and deleted. 
   ami           = data.aws_ami.al2023.id
@@ -17,7 +17,7 @@ resource "aws_instance" "webserver" {
   iam_instance_profile        = aws_iam_instance_profile.iam_profile.name
   user_data_replace_on_change = true
   tags = {
-    Name = "WebServer"
+    Name = "WebServer-tf"
   }
 
   //Added this to make sure the DynamoDB table is created before the EC2
@@ -53,7 +53,7 @@ resource "aws_lb_target_group_attachment" "LB_attach_80" {
   //Provides the ability to register instances and containers with an Application Load Balancer (ALB) target group.
   target_group_arn = aws_lb_target_group.TG80.arn
   //Register our EC2 instance as a target for the group
-  target_id = aws_instance.webserver.id
+  target_id = aws_instance.webserver-tf.id
 }
 
 resource "aws_lb_target_group" "TG9090" {
@@ -80,7 +80,7 @@ resource "aws_lb_target_group_attachment" "LB_attach_9090" {
   //Provides the ability to register instances and containers with an Application Load Balancer (ALB) target group.
   target_group_arn = aws_lb_target_group.TG9090.arn
   //Register our EC2 instance as a target for the group
-  target_id = aws_instance.webserver.id
+  target_id = aws_instance.webserver-tf.id
 }
 
 //---------------------------------------------------------
