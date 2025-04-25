@@ -1,9 +1,3 @@
-//These are the resources in the EC2 section of the AWS Console
-
-//---------------------------------------------------------
-// Instances
-//---------------------------------------------------------
-
 resource "aws_instance" "webserver" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
   //Provides an EC2 instance resource. This allows instances to be created, updated, and deleted. 

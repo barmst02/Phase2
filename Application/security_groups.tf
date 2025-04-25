@@ -1,88 +1,106 @@
+//---------------------------------------------------------
+// Default SG
+//---------------------------------------------------------
+
 resource "aws_default_security_group" "default" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/default_security_group
   //Provides a resource to manage a default security group. 
   vpc_id = data.aws_vpc.main.id
   //As a best practice, we delete all inbound rules from the default security group
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
-resource "aws_security_group" "sg-alb-tf" {
+resource "aws_vpc_security_group_egress_rule" "default-egress" {
+  security_group_id = aws_default_security_group.default.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
+}
+
+//---------------------------------------------------------
+// ALB SG
+//---------------------------------------------------------
+
+resource "aws_security_group" "sg-alb" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
   //Provides a security group resource.
   description = "Inbound access for ALB"
   name        = "alb_sg"
   vpc_id      = data.aws_vpc.main.id
-  ingress {
-    //Allow port 80 from the AWS Workspace
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  ingress {
-    //Allow port 9090 from the AWS Workspace
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  egress {
-    //Allow all outbound traffic. Outbound traffic is normally not restricted. 
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "alb_sg"
-  }
 }
 
-resource "aws_security_group" "sg-ec2-tf" {
+resource "aws_vpc_security_group_ingress_rule" "alb-80-myip" {
+  security_group_id = aws_security_group.sg-alb.id
+  //Allow port 80 from the AWS Workspace
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.my_ip
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb-9090-myip" {
+  security_group_id = aws_security_group.sg-alb.id
+  //Allow port 9090 from the AWS Workspace
+  from_port   = 9090
+  to_port     = 9090
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.my_ip
+}
+
+resource "aws_vpc_security_group_egress_rule" "alb-egress" {
+  security_group_id = aws_security_group.sg-alb.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
+}
+
+//---------------------------------------------------------
+// EC2 SG
+//---------------------------------------------------------
+
+resource "aws_security_group" "sg-ec2" {
+    //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+  //Provides a security group resource.
   description = "Inbound access for EC2"
   name        = "ec2_sg"
   vpc_id      = data.aws_vpc.main.id
-  ingress {
-    //Allow port 80 from the Load Balancer (specifically from the Load Balancer security group)
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sg-alb-tf.id]
-  }
-  ingress {
-    //Allow port 9090 from the Load Balancer (specifically from the Load Balancer security group)
-    from_port       = 9090
-    to_port         = 9090
-    protocol        = "tcp"
-    security_groups = [aws_security_group.sg-alb-tf.id]
-  }
-  ingress {
-    //Allow port 80 from the AWS Workspace
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  ingress {
-    //Allow port 9090 from the AWS Workspace
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-  egress {
-    //Allow all outbound traffic. Outbound traffic is normally not restricted. 
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "ec2_sg"
-  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2-80-myip" {
+  security_group_id = aws_security_group.sg-ec2.id
+  //Allow port 80 from the AWS Workspace
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.my_ip
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2-9090-myip" {
+  security_group_id = aws_security_group.sg-ec2.id
+  //Allow port 9090 from the AWS Workspace
+  from_port   = 9090
+  to_port     = 9090
+  ip_protocol = "tcp"
+  cidr_ipv4   = var.my_ip
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2-80-alb" {
+  security_group_id = aws_security_group.sg-ec2.id
+  //Allow port 80 from the AWS Workspace
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  referenced_security_group_id = aws_security_group.sg-alb.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2-9090-alb" {
+  security_group_id = aws_security_group.sg-ec2.id
+  //Allow port 9090 from the AWS Workspace
+  from_port   = 9090
+  to_port     = 9090
+  ip_protocol = "tcp"
+  referenced_security_group_id = aws_security_group.sg-alb.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "ec2-egress" {
+  security_group_id = aws_security_group.sg-ec2.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
 }
