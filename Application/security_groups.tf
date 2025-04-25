@@ -23,7 +23,7 @@ resource "aws_security_group" "sg-alb" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
   //Provides a security group resource.
   description = "Inbound access for ALB"
-  name        = "alb_sg"
+  name        = "alb_sg-tf"
   vpc_id      = data.aws_vpc.main.id
 }
 
@@ -59,7 +59,7 @@ resource "aws_security_group" "sg-ec2" {
     //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
   //Provides a security group resource.
   description = "Inbound access for EC2"
-  name        = "ec2_sg"
+  name        = "ec2_sg-tf"
   vpc_id      = data.aws_vpc.main.id
 }
 
