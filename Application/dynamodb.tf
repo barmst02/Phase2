@@ -4,7 +4,7 @@
 // Tables
 //---------------------------------------------------------
 
-resource "aws_dynamodb_table" "db_table" {
+resource "aws_dynamodb_table" "db-table-tf" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table
   //Provides a DynamoDB table resource.
   name           = "simple-web-app"

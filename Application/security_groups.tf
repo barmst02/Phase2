@@ -45,7 +45,7 @@ resource "aws_vpc_security_group_ingress_rule" "alb-9090-myip" {
   cidr_ipv4   = var.my_ip
 }
 
-resource "aws_vpc_security_group_egress_rule" "alb-egress" {
+resource "aws_vpc_security_group_egress_rule" "allow-all-alb" {
   security_group_id = aws_security_group.sg-alb-tf.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # semantically equivalent to all ports
@@ -99,7 +99,7 @@ resource "aws_vpc_security_group_ingress_rule" "ec2-9090-alb" {
   referenced_security_group_id = aws_security_group.sg-alb-tf.id
 }
 
-resource "aws_vpc_security_group_egress_rule" "ec2-egress" {
+resource "aws_vpc_security_group_egress_rule" "allow-all-ec2" {
   security_group_id = aws_security_group.sg-ec2-tf.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # semantically equivalent to all ports

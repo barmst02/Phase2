@@ -23,7 +23,7 @@ resource "aws_iam_role" "ec2webserver-role-tf" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "dynamo_attachment" {
+resource "aws_iam_role_policy_attachment" "dynamo-attachment" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
   //Attaches a Managed IAM Policy to an IAM role
   role = aws_iam_role.ec2webserver-role-tf.name
@@ -31,7 +31,7 @@ resource "aws_iam_role_policy_attachment" "dynamo_attachment" {
   policy_arn = "arn:aws-us-gov:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_attachment" {
+resource "aws_iam_role_policy_attachment" "ssm-attachment" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
   //Attaches a Managed IAM Policy to an IAM role
   role = aws_iam_role.ec2webserver-role-tf.name
