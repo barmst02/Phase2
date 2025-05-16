@@ -4,7 +4,7 @@
 // Roles
 //---------------------------------------------------------
 
-resource "aws_iam_role" "ec2webserver-role" {
+resource "aws_iam_role" "ec2webserver-role-tf" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
   //Provides an IAM role.
   name = "EC2Webserver-role-tf"
@@ -26,7 +26,7 @@ resource "aws_iam_role" "ec2webserver-role" {
 resource "aws_iam_role_policy_attachment" "dynamo_attachment" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
   //Attaches a Managed IAM Policy to an IAM role
-  role = aws_iam_role.ec2webserver-role.name
+  role = aws_iam_role.ec2webserver-role-tf.name
   //Grant DynamoDB Full Access
   policy_arn = "arn:aws-us-gov:iam::aws:policy/AmazonDynamoDBFullAccess"
 }
@@ -34,15 +34,15 @@ resource "aws_iam_role_policy_attachment" "dynamo_attachment" {
 resource "aws_iam_role_policy_attachment" "ssm_attachment" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment
   //Attaches a Managed IAM Policy to an IAM role
-  role = aws_iam_role.ec2webserver-role.name
+  role = aws_iam_role.ec2webserver-role-tf.name
   //Grant Session Manager Full Access
   policy_arn = "arn:aws-us-gov:iam::aws:policy/AmazonSSMFullAccess"
 }
 
-resource "aws_iam_instance_profile" "ec2webserver-profile" {
+resource "aws_iam_instance_profile" "ec2webserver-profile-tf" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile
   //Provides an IAM instance profile.
   //This is the resource used when assigning the role to the EC2
   name = "EC2_IAM_Profile-tf"
-  role = aws_iam_role.ec2webserver-role.name
+  role = aws_iam_role.ec2webserver-role-tf.name
 }

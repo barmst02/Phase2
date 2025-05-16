@@ -1,4 +1,4 @@
-resource "aws_instance" "webserver" {
+resource "aws_instance" "webserver-tf" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
   //Provides an EC2 instance resource. This allows instances to be created, updated, and deleted. 
   ami           = data.aws_ami.al2023.id
@@ -8,7 +8,7 @@ resource "aws_instance" "webserver" {
   associate_public_ip_address = true
   user_data                   = file("user_data.sh")
   vpc_security_group_ids      = [aws_security_group.sg-ec2.id]
-  iam_instance_profile        = aws_iam_instance_profile.ec2webserver-profile.id
+  iam_instance_profile        = aws_iam_instance_profile.ec2webserver-profile-tf.id
   user_data_replace_on_change = true
   tags = {
     Name = "WebServer-tf"
