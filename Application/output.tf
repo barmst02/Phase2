@@ -31,10 +31,10 @@ output "alb_dns" {
   value = aws_lb.alb.dns_name
 }
 output "ecs_dns" {
-  value = aws_instance.webserver.public_dns
+  value = aws_instance.webserver-tf.public_dns
 }
 
 output "ecs_ip" {
-  value = aws_instance.webserver.public_ip
+  value = aws_instance.webserver-tf.public_ip
 }
 
