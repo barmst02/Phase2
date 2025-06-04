@@ -7,7 +7,7 @@ resource "aws_instance" "webserver-tf" {
   subnet_id                   = data.aws_subnet.public-1a.id
   associate_public_ip_address = true
   user_data                   = file("user_data.sh")
-  vpc_security_group_ids      = [aws_security_group.sg-ec2.id]
+  vpc_security_group_ids      = [aws_security_group.sg-ec2-tf.id]
   iam_instance_profile        = aws_iam_instance_profile.ec2webserver-profile-tf.id
   user_data_replace_on_change = true
   tags = {
@@ -16,7 +16,7 @@ resource "aws_instance" "webserver-tf" {
 
   //Added this to make sure the DynamoDB table is created before the EC2
   //That way the user_data.sh script can populate records in the table
-  depends_on = [aws_dynamodb_table.db_table]
+  depends_on = [aws_dynamodb_table.db-table-tf]
 }
 
 

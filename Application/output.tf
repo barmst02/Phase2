@@ -28,7 +28,7 @@ output "ami" {
 }
 
 output "alb_dns" {
-  value = aws_lb.alb.dns_name
+  value = aws_lb.alb-tf.dns_name
 }
 output "ecs_dns" {
   value = aws_instance.webserver-tf.public_dns
