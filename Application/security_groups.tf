@@ -56,7 +56,7 @@ resource "aws_vpc_security_group_egress_rule" "allow-all-alb" {
 //---------------------------------------------------------
 
 resource "aws_security_group" "sg-ec2-tf" {
-    //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
   //Provides a security group resource.
   description = "Inbound access for EC2"
   name        = "ec2_sg-tf"
@@ -84,18 +84,18 @@ resource "aws_vpc_security_group_ingress_rule" "ec2-9090-myip" {
 resource "aws_vpc_security_group_ingress_rule" "ec2-80-alb" {
   security_group_id = aws_security_group.sg-ec2-tf.id
   //Allow port 80 from the AWS Workspace
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
+  from_port                    = 80
+  to_port                      = 80
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.sg-alb-tf.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ec2-9090-alb" {
   security_group_id = aws_security_group.sg-ec2-tf.id
   //Allow port 9090 from the AWS Workspace
-  from_port   = 9090
-  to_port     = 9090
-  ip_protocol = "tcp"
+  from_port                    = 9090
+  to_port                      = 9090
+  ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.sg-alb-tf.id
 }
 

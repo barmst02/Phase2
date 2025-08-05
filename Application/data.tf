@@ -10,6 +10,53 @@ data "aws_vpc" "main" {
   default = true
 }
 
+data "aws_subnet" "public-1a" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
+  //Provides details about a specific VPC subnet.
+  vpc_id = data.aws_vpc.main.id
+  //Find the Subnet we want by searching for the availability zone
+  availability_zone = "us-gov-west-1a"
+}
+
+data "aws_subnet" "public-1b" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
+  //Provides details about a specific VPC subnet.
+  vpc_id = data.aws_vpc.main.id
+  //Find the Subnet we want by searching for the availability zone
+  availability_zone = "us-gov-west-1b"
+}
+
+
+
+
+
+
+
+
+
+
+
+data "aws_subnets" "public" {
+  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets
+  //Retrieves a set of all subnets in a VPC
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.main.id]
+  }
+  filter {
+    //Find the Subnets with a name starting with "Public". 
+    name   = "map-public-ip-on-launch"
+    values = [true]
+  }
+}
+
+data "aws_subnet" "public" {
+  //https://developer.hashicorp.com/terraform/language/meta-arguments/for_each
+  //Instead of providing details about a specific VPC subnet, we are creating a set containing multiple subnets
+  //This is used when creating the load balancer.
+  for_each = toset(data.aws_subnets.public.ids)
+  id       = each.value
+}
 
 data "aws_ami" "al2023" {
   //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
@@ -36,40 +83,3 @@ data "aws_ami" "al2023" {
   }
 }
 
-data "aws_subnet" "public-1a" {
-  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
-  //Provides details about a specific VPC subnet.
-  vpc_id = data.aws_vpc.main.id
-  //Find the Subnet we want by searching for the availability zone
-  availability_zone = "us-gov-west-1a"
-}
-
-data "aws_subnet" "public-1b" {
-  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet
-  //Provides details about a specific VPC subnet.
-  vpc_id = data.aws_vpc.main.id
-  //Find the Subnet we want by searching for the availability zone
-  availability_zone = "us-gov-west-1b"
-}
-
-data "aws_subnets" "public" {
-  //https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets
-  //Retrieves a set of all subnets in a VPC
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.main.id]
-  }
-  filter {
-    //Find the Subnets with a name starting with "Public". 
-    name   = "map-public-ip-on-launch"
-    values = [true]
-  }
-}
-
-data "aws_subnet" "public" {
-  //https://developer.hashicorp.com/terraform/language/meta-arguments/for_each
-  //Instead of providing details about a specific VPC subnet, we are creating a set containing multiple subnets
-  //This is used when creating the load balancer.
-  for_each = toset(data.aws_subnets.public.ids)
-  id       = each.value
-}

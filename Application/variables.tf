@@ -9,5 +9,5 @@ variable "my_ip" {
 
 variable "ec2_ami" {
   description = "the AMI to use when launching an EC2"
-  default = "ami-06cf22f69c918a2c1"
+  default     = "ami-06cf22f69c918a2c1"
 }
